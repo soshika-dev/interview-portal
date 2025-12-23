@@ -1,0 +1,58 @@
+@layer base {
+  html {
+    font-size: 16px;
+  }
+
+  body {
+    min-height: 100vh;
+    background: linear-gradient(135deg, rgba(15, 79, 92, 0.08), rgba(111, 211, 222, 0.06)),
+      radial-gradient(circle at top right, rgba(79, 142, 220, 0.08), transparent 55%),
+      radial-gradient(circle at bottom left, rgba(15, 79, 92, 0.08), transparent 60%);
+    background-attachment: fixed;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-weight: 700;
+    color: rgb(15 23 42 / 0.92);
+  }
+
+  p {
+    line-height: 1.9;
+  }
+}
+
+@layer components {
+  .surface-card {
+    @apply bg-base-100 border border-base-300 rounded-2xl shadow-soft;
+  }
+
+  .section-divider {
+    @apply border-t border-base-300/70;
+  }
+
+  .input-base {
+    @apply input input-bordered w-full transition focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/25 focus-visible:border-primary/40;
+  }
+
+  .textarea-base {
+    @apply textarea textarea-bordered w-full transition focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/25 focus-visible:border-primary/40;
+  }
+
+  .select-base {
+    @apply select select-bordered w-full transition focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/25 focus-visible:border-primary/40;
+  }
+}
+
+.fade-slide-enter-active,
+.fade-slide-leave-active {
+  transition: all 0.25s ease;
+}
+
+.fade-slide-enter-from,
+.fade-slide-leave-to {
+  opacity: 0;
+  transform: translateY(12px);
+}

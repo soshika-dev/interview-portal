@@ -1,114 +1,145 @@
 <template>
-  <div class="min-h-screen bg-base-100">
-    <nav class="navbar bg-base-100 border-b border-base-200 sticky top-0 z-20">
+  <div class="min-h-screen text-base-content">
+    <nav class="navbar bg-base-100/80 backdrop-blur border-b border-base-300 sticky top-0 z-30">
       <div class="navbar-start">
         <div class="flex flex-col">
-          <span class="text-lg font-bold">آواگستر</span>
-          <span class="text-xs text-base-content/60">Avagostar</span>
+          <span class="text-lg font-bold tracking-tight">{{ uiText.brand.fa }}</span>
+          <span class="text-xs text-base-content/50">{{ uiText.brand.en }}</span>
         </div>
       </div>
       <div class="navbar-center hidden lg:flex">
-        <span class="text-base font-semibold">پرتال جذب توسعه‌دهندگان</span>
+        <span class="text-sm font-semibold text-base-content/70">{{ uiText.nav.title }}</span>
       </div>
       <div class="navbar-end gap-2">
-        <a class="btn btn-ghost btn-sm">درباره ما</a>
-        <a class="btn btn-ghost btn-sm">سؤالات متداول</a>
-        <a class="btn btn-ghost btn-sm">پشتیبانی</a>
+        <a v-for="link in uiText.nav.links" :key="link" class="btn btn-ghost btn-xs">{{ link }}</a>
       </div>
     </nav>
 
-    <header class="bg-gradient-to-bl from-base-200 via-base-100 to-base-200">
-      <div class="max-w-6xl mx-auto px-4 py-12 md:py-16 grid lg:grid-cols-[1.2fr_0.8fr] gap-8 items-center">
-        <div class="space-y-6">
-          <div class="badge badge-primary badge-outline">آواگستر | Avagostar</div>
-          <h1 class="text-3xl md:text-4xl font-bold leading-relaxed">
-            پرتال درخواست همکاری توسعه‌دهندگان نرم‌افزار
-          </h1>
-          <p class="text-base-content/70 leading-7">
-            در آواگستر به دنبال افرادی هستیم که عاشق ساختن محصولات مقیاس‌پذیر و مدرن هستند. فرم زیر به شما کمک می‌کند
-            تا سریع، شفاف و بدون پیچیدگی درخواست خود را ثبت کنید.
-          </p>
-          <button class="btn btn-primary" @click="startApplication">شروع درخواست</button>
+    <header class="relative">
+      <div class="max-w-4xl mx-auto px-4 py-10 md:py-14 grid lg:grid-cols-[1.2fr_0.8fr] gap-8 items-center">
+        <div class="space-y-5">
+          <div class="badge badge-outline badge-primary text-xs">{{ uiText.hero.badge }}</div>
+          <h1 class="text-3xl md:text-[32px] leading-relaxed">{{ uiText.hero.title }}</h1>
+          <p class="text-base-content/70 text-sm md:text-base">{{ uiText.hero.subtitle }}</p>
+          <div class="flex flex-col sm:flex-row gap-3">
+            <button class="btn btn-primary" @click="startApplication">{{ uiText.hero.cta }}</button>
+            <button class="btn btn-ghost">دانلود بروشور موقعیت‌ها</button>
+          </div>
+          <div class="grid sm:grid-cols-3 gap-2 text-xs text-base-content/70">
+            <div v-for="trust in uiText.hero.trust" :key="trust" class="flex items-center gap-2 bg-base-100/70 border border-base-300 rounded-2xl px-3 py-2">
+              <span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
+              <span>{{ trust }}</span>
+            </div>
+          </div>
         </div>
-        <div class="card bg-base-100 shadow-xl border border-base-200">
-          <div class="card-body space-y-4">
-            <h2 class="card-title">مسیر ثبت درخواست</h2>
+        <div class="surface-card">
+          <div class="p-6 space-y-4">
+            <h2 class="text-lg font-semibold">مسیر ثبت درخواست</h2>
             <p class="text-sm text-base-content/70">سه مرحله کوتاه برای جمع‌آوری اطلاعات کلیدی شما.</p>
             <ul class="space-y-2 text-sm">
-              <li class="flex items-center gap-2"><span class="badge badge-primary">۱</span> اطلاعات شخصی و رزومه</li>
-              <li class="flex items-center gap-2"><span class="badge badge-primary">۲</span> مهارت نرم و ترجیح‌های کاری</li>
-              <li class="flex items-center gap-2"><span class="badge badge-primary">۳</span> چالش کدنویسی</li>
+              <li class="flex items-center gap-2"><span class="badge badge-primary badge-sm">۱</span> اطلاعات شخصی و رزومه</li>
+              <li class="flex items-center gap-2"><span class="badge badge-primary badge-sm">۲</span> مهارت نرم و ترجیح‌های کاری</li>
+              <li class="flex items-center gap-2"><span class="badge badge-primary badge-sm">۳</span> چالش کدنویسی</li>
             </ul>
-            <div class="alert alert-info text-sm">
-              میانگین زمان تکمیل: حدود ۲۰ دقیقه
-            </div>
+            <div class="alert bg-base-200 border border-base-300 text-sm">زمان تکمیل حدود ۱۰ دقیقه</div>
           </div>
         </div>
       </div>
     </header>
 
-    <main id="application" class="max-w-6xl mx-auto px-4 py-10 space-y-8">
-      <Stepper v-if="!submitted" :current-step="currentStep" />
-
-      <div v-if="submitted">
-        <Summary :data="payload" :tracking-code="trackingCode" @reset="resetApplication" />
+    <main id="application" class="max-w-4xl mx-auto px-4 py-8 space-y-6">
+      <div v-if="!submitted" class="lg:sticky lg:top-4 z-20">
+        <Stepper :current-step="currentStep" />
       </div>
 
-      <div v-else class="space-y-6">
-        <Step1Personal
-          v-if="currentStep === 1"
-          v-model="form.step1"
-          :errors="errors.step1"
-          :file-errors="fileErrors.step1"
-          :file-state="fileState"
-          :last-saved-at="formattedSavedAt"
-          @save-draft="saveDraft"
-          @resume-change="handleResume"
-          @portfolio-change="handlePortfolio"
-        />
+      <transition name="fade-slide" mode="out-in">
+        <div v-if="submitted" key="summary">
+          <Summary :data="payload" :tracking-code="trackingCode" @reset="resetApplication" />
+        </div>
 
-        <Step2SoftSkills
-          v-if="currentStep === 2"
-          v-model="form.step2"
-          :errors="errors.step2"
-          :last-saved-at="formattedSavedAt"
-          @save-draft="saveDraft"
-        />
+        <div v-else key="steps" class="space-y-6">
+          <Step1Personal
+            v-if="currentStep === 1"
+            v-model="form.step1"
+            :errors="errors.step1"
+            :file-errors="fileErrors.step1"
+            :file-state="fileState"
+            :last-saved-at="formattedSavedAt"
+            @save-draft="saveDraft"
+            @resume-change="handleResume"
+            @portfolio-change="handlePortfolio"
+            @validate-field="(field) => validateField('step1', field)"
+          />
 
-        <Step3Challenge
-          v-if="currentStep === 3"
-          v-model="form.step3"
-          :errors="errors.step3"
-          :file-errors="fileErrors.step3"
-          :file-state="fileState"
-          :last-saved-at="formattedSavedAt"
-          @save-draft="saveDraft"
-          @solution-change="handleSolution"
-        />
+          <Step2SoftSkills
+            v-if="currentStep === 2"
+            v-model="form.step2"
+            :errors="errors.step2"
+            :last-saved-at="formattedSavedAt"
+            @save-draft="saveDraft"
+            @validate-field="(field) => validateField('step2', field)"
+          />
 
-        <div class="flex flex-col md:flex-row gap-3 md:justify-between">
-          <button class="btn btn-outline" type="button" :disabled="currentStep === 1" @click="goBack">
-            بازگشت
-          </button>
-          <div class="flex gap-3">
-            <button v-if="currentStep < 3" class="btn btn-primary" type="button" @click="goNext">ادامه</button>
-            <button
-              v-else
-              class="btn btn-primary"
-              type="button"
-              :class="loading ? 'loading' : ''"
-              @click="submitApplication"
-            >
-              ارسال نهایی
+          <Step3Challenge
+            v-if="currentStep === 3"
+            v-model="form.step3"
+            :errors="errors.step3"
+            :file-errors="fileErrors.step3"
+            :file-state="fileState"
+            :last-saved-at="formattedSavedAt"
+            :review="review"
+            @save-draft="saveDraft"
+            @solution-change="handleSolution"
+            @validate-field="(field) => validateField('step3', field)"
+            @edit-step="jumpToStep"
+          />
+
+          <div class="flex flex-col md:flex-row gap-3 md:justify-between">
+            <button class="btn btn-outline" type="button" :disabled="currentStep === 1 || loading" @click="goBack">
+              بازگشت
             </button>
+            <div class="flex gap-3">
+              <button v-if="currentStep < 3" class="btn btn-primary" type="button" @click="goNext">
+                ادامه
+              </button>
+              <button
+                v-else
+                class="btn btn-primary"
+                type="button"
+                :class="loading ? 'loading' : ''"
+                :disabled="loading"
+                @click="submitApplication"
+              >
+                ارسال نهایی
+              </button>
+            </div>
           </div>
         </div>
-      </div>
+      </transition>
 
-      <div class="alert alert-warning text-sm">
-        <span>اطلاعات به صورت محلی ذخیره می‌شود و در ارسال نهایی تنها متادیتای فایل‌ها ثبت خواهد شد.</span>
+      <div class="alert bg-base-100 border border-base-300 text-xs">
+        <span>{{ uiText.footerNote }}</span>
       </div>
     </main>
+
+    <div v-if="showDraftModal" class="modal modal-open">
+      <div class="modal-box">
+        <h3 class="font-bold text-lg">پیش‌نویس ذخیره‌شده یافت شد</h3>
+        <p class="py-4 text-sm text-base-content/70">
+          یک پیش‌نویس قبلی در مرورگر شما وجود دارد. آیا می‌خواهید آن را بازیابی کنید؟
+        </p>
+        <div class="modal-action">
+          <button class="btn btn-primary" type="button" @click="restoreDraft">بازیابی</button>
+          <button class="btn btn-ghost" type="button" @click="discardDraft">حذف پیش‌نویس</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="toast toast-bottom toast-end z-50">
+      <div v-for="toast in toasts" :key="toast.id" class="alert shadow-soft" :class="toastClass(toast.tone)">
+        <span class="text-xs">{{ toast.message }}</span>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -120,6 +151,8 @@ import Step2SoftSkills from './components/Step2SoftSkills.vue'
 import Step3Challenge from './components/Step3Challenge.vue'
 import Summary from './components/Summary.vue'
 import { useDraftStorage } from './composables/useDraftStorage'
+import { useFormValidation } from './composables/useFormValidation'
+import { useToast } from './composables/useToast'
 import {
   formatFileSize,
   isRequired,
@@ -128,6 +161,7 @@ import {
   isValidUrl
 } from './utils/validators'
 import { generateTrackingCode } from './utils/trackingCode'
+import { uiText } from './utils/uiText'
 
 const currentStep = ref(1)
 const submitted = ref(false)
@@ -172,13 +206,39 @@ const initialData = () => ({
 })
 
 const storage = useDraftStorage('avagostar-application-draft')
-const draft = storage.loadDraft()
 const form = reactive(initialData())
+const pendingDraft = ref(null)
+const showDraftModal = ref(false)
+const autosaveEnabled = ref(true)
 
+const { toasts, show: showToast } = useToast()
+
+const draft = storage.loadDraft()
 if (draft) {
-  Object.assign(form.step1, draft.step1 || {})
-  Object.assign(form.step2, draft.step2 || {})
-  Object.assign(form.step3, draft.step3 || {})
+  pendingDraft.value = draft
+  showDraftModal.value = true
+  autosaveEnabled.value = false
+}
+
+const restoreDraft = () => {
+  if (!pendingDraft.value) return
+  Object.assign(form.step1, pendingDraft.value.step1 || {})
+  Object.assign(form.step2, pendingDraft.value.step2 || {})
+  Object.assign(form.step3, pendingDraft.value.step3 || {})
+  errors.step1 = {}
+  errors.step2 = {}
+  errors.step3 = {}
+  showDraftModal.value = false
+  autosaveEnabled.value = true
+  showToast('پیش‌نویس بازیابی شد', 'info')
+}
+
+const discardDraft = () => {
+  storage.clearDraft()
+  pendingDraft.value = null
+  showDraftModal.value = false
+  autosaveEnabled.value = true
+  showToast('پیش‌نویس حذف شد', 'warning')
 }
 
 const fileState = reactive({
@@ -187,30 +247,96 @@ const fileState = reactive({
   solution: null
 })
 
-const errors = reactive({
-  step1: {},
-  step2: {},
-  step3: {}
-})
-
 const fileErrors = reactive({
   step1: {},
   step3: {}
 })
+
+const validationRules = {
+  step1: {
+    fullName: (value) => (isRequired(value) ? null : 'نام و نام خانوادگی الزامی است.'),
+    email: (value) => {
+      if (!isRequired(value)) return 'ایمیل الزامی است.'
+      return isValidEmail(value) ? null : 'فرمت ایمیل معتبر نیست.'
+    },
+    phone: (value) => {
+      if (!isRequired(value)) return 'شماره موبایل الزامی است.'
+      return isValidIranPhone(value) ? null : 'فرمت شماره موبایل معتبر نیست.'
+    },
+    city: (value) => (isRequired(value) ? null : 'شهر محل سکونت الزامی است.'),
+    github: (value) => (value && !isValidUrl(value) ? 'لینک گیت‌هاب معتبر نیست.' : null),
+    linkedin: (value) => (value && !isValidUrl(value) ? 'لینک لینکدین معتبر نیست.' : null),
+    seniority: (value) => (isRequired(value) ? null : 'سطح ارشدیت الزامی است.'),
+    interest: (value) => (isRequired(value) ? null : 'حوزه علاقه الزامی است.'),
+    consent: (value) => (value ? null : 'تأیید موافقت الزامی است.')
+  },
+  step2: {
+    failureLesson: (value) => (isRequired(value) ? null : 'این پاسخ الزامی است.'),
+    teamSuccess: (value) => (isRequired(value) ? null : 'این پاسخ الزامی است.')
+  },
+  step3: {
+    language: (value) => (isRequired(value) ? null : 'انتخاب زبان الزامی است.'),
+    repoLink: (value, data) => {
+      if (value && !isValidUrl(value)) return 'لینک ریپازیتوری معتبر نیست.'
+      if (!value && !data.solutionMeta) return 'یکی از گزینه‌های لینک ریپو یا فایل ZIP الزامی است.'
+      return null
+    },
+    liveLink: (value) => (value && !isValidUrl(value) ? 'لینک اجرای آنلاین معتبر نیست.' : null),
+    approach: (value) => (isRequired(value) ? null : 'توضیح رویکرد الزامی است.'),
+    ownCode: (value) => (value ? null : 'تأیید مالکیت کد الزامی است.')
+  }
+}
+
+const { errors, validateField: validateFieldBase, validateStep, setFieldError } = useFormValidation(
+  validationRules
+)
+
+errors.step1 = {}
+errors.step2 = {}
+errors.step3 = {}
 
 const formattedSavedAt = computed(() => {
   if (!storage.lastSavedAt.value) return ''
   return new Date(storage.lastSavedAt.value).toLocaleString('fa-IR')
 })
 
+const step2AnsweredCount = computed(() => {
+  const values = Object.values(form.step2)
+  return values.filter((item) => item !== null && item !== undefined && String(item).trim() !== '').length
+})
+
+const review = computed(() => ({
+  step1Summary: `${form.step1.fullName || '---'} · ${form.step1.seniority || '---'} · ${form.step1.city || '---'}`,
+  step2Summary: `پاسخ داده‌شده: ${step2AnsweredCount.value} از ۱۰`
+}))
+
+let autosaveTimer = null
+let lastToastAt = 0
+
+watch(step2AnsweredCount, (value) => {
+  if (value >= 8) {
+    setFieldError('step2', 'progress', null)
+  }
+})
+
 const saveDraft = () => {
-  storage.saveDraft(form)
+  storage.saveDraft(JSON.parse(JSON.stringify(form)))
+  showToast('ذخیره شد', 'info')
 }
 
 watch(
   form,
   () => {
-    storage.saveDraft(form)
+    if (!autosaveEnabled.value) return
+    clearTimeout(autosaveTimer)
+    autosaveTimer = setTimeout(() => {
+      storage.saveDraft(JSON.parse(JSON.stringify(form)))
+      const now = Date.now()
+      if (now - lastToastAt > 2000) {
+        showToast('ذخیره شد', 'info')
+        lastToastAt = now
+      }
+    }, 800)
   },
   { deep: true }
 )
@@ -222,6 +348,7 @@ const startApplication = () => {
 
 const handleResume = (file) => {
   fileErrors.step1.resume = ''
+  setFieldError('step1', 'resume', null)
   if (!file) {
     fileState.resume = null
     form.step1.resumeMeta = null
@@ -290,55 +417,34 @@ const handleSolution = (file) => {
     type: file.type,
     sizeLabel: formatFileSize(file.size)
   }
+  validateField('step3', 'repoLink')
+}
+
+const validateField = (step, field) => {
+  validateFieldBase(step, field, form[step])
 }
 
 const validateStep1 = () => {
-  errors.step1 = {}
-  if (!isRequired(form.step1.fullName)) errors.step1.fullName = 'نام و نام خانوادگی الزامی است.'
-  if (!isRequired(form.step1.email)) {
-    errors.step1.email = 'ایمیل الزامی است.'
-  } else if (!isValidEmail(form.step1.email)) {
-    errors.step1.email = 'فرمت ایمیل معتبر نیست.'
+  const valid = validateStep('step1', form.step1)
+  if (!form.step1.resumeMeta) {
+    setFieldError('step1', 'resume', 'رزومه الزامی است.')
   }
-  if (!isRequired(form.step1.phone)) {
-    errors.step1.phone = 'شماره موبایل الزامی است.'
-  } else if (!isValidIranPhone(form.step1.phone)) {
-    errors.step1.phone = 'فرمت شماره موبایل معتبر نیست.'
-  }
-  if (!isRequired(form.step1.city)) errors.step1.city = 'شهر محل سکونت الزامی است.'
-  if (form.step1.github && !isValidUrl(form.step1.github)) errors.step1.github = 'لینک گیت‌هاب معتبر نیست.'
-  if (form.step1.linkedin && !isValidUrl(form.step1.linkedin)) errors.step1.linkedin = 'لینک لینکدین معتبر نیست.'
-  if (!isRequired(form.step1.seniority)) errors.step1.seniority = 'سطح ارشدیت الزامی است.'
-  if (!isRequired(form.step1.interest)) errors.step1.interest = 'حوزه علاقه الزامی است.'
-  if (!form.step1.resumeMeta) errors.step1.resume = 'رزومه الزامی است.'
-  if (!form.step1.consent) errors.step1.consent = 'تأیید موافقت الزامی است.'
-  return Object.keys(errors.step1).length === 0
+  return valid && !!form.step1.resumeMeta
 }
 
 const validateStep2 = () => {
-  errors.step2 = {}
-  if (!isRequired(form.step2.failureLesson)) errors.step2.failureLesson = 'این پاسخ الزامی است.'
-  if (!isRequired(form.step2.teamSuccess)) errors.step2.teamSuccess = 'این پاسخ الزامی است.'
-  const answered = Object.values(form.step2).filter((item) => isRequired(item)).length
-  if (answered < 8) errors.step2.progress = 'حداقل باید به ۸ سوال پاسخ دهید.'
-  return Object.keys(errors.step2).length === 0
+  const valid = validateStep('step2', form.step2)
+  if (step2AnsweredCount.value < 8) {
+    setFieldError('step2', 'progress', 'حداقل باید به ۸ سوال پاسخ دهید.')
+    return false
+  }
+  setFieldError('step2', 'progress', null)
+  return valid
 }
 
 const validateStep3 = () => {
-  errors.step3 = {}
-  if (!isRequired(form.step3.language)) errors.step3.language = 'انتخاب زبان الزامی است.'
-  if (form.step3.repoLink && !isValidUrl(form.step3.repoLink)) {
-    errors.step3.repoLink = 'لینک ریپازیتوری معتبر نیست.'
-  }
-  if (form.step3.liveLink && !isValidUrl(form.step3.liveLink)) {
-    errors.step3.liveLink = 'لینک اجرای آنلاین معتبر نیست.'
-  }
-  if (!form.step3.repoLink && !form.step3.solutionMeta) {
-    errors.step3.repoLink = 'یکی از گزینه‌های لینک ریپو یا فایل zip الزامی است.'
-  }
-  if (!isRequired(form.step3.approach)) errors.step3.approach = 'توضیح رویکرد الزامی است.'
-  if (!form.step3.ownCode) errors.step3.ownCode = 'تأیید مالکیت کد الزامی است.'
-  return Object.keys(errors.step3).length === 0
+  const valid = validateStep('step3', form.step3)
+  return valid
 }
 
 const goNext = () => {
@@ -349,6 +455,11 @@ const goNext = () => {
 
 const goBack = () => {
   if (currentStep.value > 1) currentStep.value -= 1
+}
+
+const jumpToStep = (step) => {
+  currentStep.value = step
+  document.getElementById('application')?.scrollIntoView({ behavior: 'smooth' })
 }
 
 const payload = computed(() => ({
@@ -384,11 +495,19 @@ const resetApplication = () => {
   fileState.resume = null
   fileState.portfolio = null
   fileState.solution = null
+  fileErrors.step1 = {}
+  fileErrors.step3 = {}
   errors.step1 = {}
   errors.step2 = {}
   errors.step3 = {}
   currentStep.value = 1
   submitted.value = false
   trackingCode.value = ''
+}
+
+const toastClass = (tone) => {
+  if (tone === 'warning') return 'alert-warning'
+  if (tone === 'info') return 'alert-info'
+  return 'alert-success'
 }
 </script>
