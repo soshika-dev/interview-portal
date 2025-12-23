@@ -1,10 +1,11 @@
 export const isRequired = (value) => value !== null && value !== undefined && String(value).trim() !== ''
 
-export const isValidEmail = (value) =>
-  /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(value || '').trim())
+export const isValidEmail = (value) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(value || '').trim())
 
-export const isValidIranPhone = (value) =>
-  /^(\+98|0)?9\d{9}$/.test(String(value || '').trim())
+export const isValidIranPhone = (value) => {
+  const cleaned = String(value || '').replace(/[\s-]/g, '').trim()
+  return /^(\+98|0)?9\d{9}$/.test(cleaned)
+}
 
 export const isValidUrl = (value) => {
   if (!value) return true
